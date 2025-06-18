@@ -1,0 +1,17 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /hg-social
+
+spring:
+  application:
+    name: hg-social
+  flayway:
+    anable: true
+    baseline-on-migrate: false
+    locations: classpath:db/migration
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/db_hg_social
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
