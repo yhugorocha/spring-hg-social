@@ -2,7 +2,6 @@ package br.com.yhugorocha.social.service;
 
 import br.com.yhugorocha.social.dto.UserRequestDTO;
 import br.com.yhugorocha.social.dto.UserResponseDTO;
-import br.com.yhugorocha.social.entities.User;
 
 import java.util.List;
 
