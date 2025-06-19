@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_users")
@@ -25,6 +24,9 @@ public class User {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "gender")
     private String gender;

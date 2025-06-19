@@ -10,8 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequestDTO {
-    private String fistName;
+    private String firstName;
     private String lastName;
+    private String username;
+    private String gender;
     private String email;
     private String password;
 }
