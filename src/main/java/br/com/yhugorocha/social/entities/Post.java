@@ -29,8 +29,8 @@ public class Post {
     @Column(name = "video_url")
     private String videoUrl;
 
-    @Column(name = "user_id")
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
