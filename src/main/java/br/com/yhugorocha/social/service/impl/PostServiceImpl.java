@@ -47,8 +47,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponseDTO> getAllPostsByUserId(Long userId) {
-
-        return List.of();
+        return postRepository.findPostByUserId(userId).stream()
+                .map(postMapper::postResponseDTO)
+                .toList();
     }
 
     @Override
@@ -69,9 +70,18 @@ public class PostServiceImpl implements PostService {
         return null;
     }
 
+    @Transactional
     @Override
     public PostResponseDTO likePost(Long postId, Long userId) {
-        return null;
+        var post = this.findByIdInternal(postId);
+        var user = userService.findByIdInternal(userId);
+        if (post.getLikes().contains(user)) {
+            post.getLikes().remove(user);
+        } else {
+            post.getLikes().add(user);
+        }
+        postRepository.save(post);
+        return postMapper.postResponseDTO(post);
     }
 
     public Post findByIdInternal(Long postId) {
