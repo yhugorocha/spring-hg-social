@@ -29,9 +29,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO findUserById(Long userId) {
-        return userRepository.findById(userId)
-                .map(userMapper::userResponseDTO)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        var user = this.findByIdInternal(userId);
+        return userMapper.userResponseDTO(user);
     }
 
     @Override
@@ -44,10 +43,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UserResponseDTO followUser(Long userId, Long followUserId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-        User followUser = userRepository.findById(followUserId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + followUserId));
+        User user = this.findByIdInternal(userId);
+        User followUser = this.findByIdInternal(followUserId);
 
         if (user.getFollowing().contains(followUserId)) {
             throw new RuntimeException("You are already following this user.");
@@ -62,9 +59,19 @@ public class UserServiceImpl implements UserService {
         return userMapper.userResponseDTO(user);
     }
 
+    @Transactional
     @Override
-    public UserResponseDTO updateUser(Long userId, User user) {
-        return null;
+    public UserResponseDTO updateUser(Long userId, UserRequestDTO requestDTO) {
+        User existingUser = this.findByIdInternal(userId);
+
+        userMapper.updateUserFromUserRequestDTO(requestDTO, existingUser);
+        userRepository.save(existingUser);
+        return userMapper.userResponseDTO(existingUser);
+    }
+
+    public User findByIdInternal(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
     }
 
     @Override

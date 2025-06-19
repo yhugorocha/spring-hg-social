@@ -12,6 +12,6 @@ public interface UserService {
     public UserResponseDTO findUserById(Long userId);
     public UserResponseDTO findUserByEmail(String email);
     public UserResponseDTO followUser(Long userId, Long followUserId);
-    public UserResponseDTO updateUser(Long userId, User user);
+    public UserResponseDTO updateUser(Long userId, UserRequestDTO user);
     public List<UserResponseDTO> searchUser(String query);
 }
