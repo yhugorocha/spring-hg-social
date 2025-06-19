@@ -3,6 +3,8 @@ package br.com.yhugorocha.social.service.impl;
 import br.com.yhugorocha.social.dto.PostRequestDTO;
 import br.com.yhugorocha.social.dto.PostResponseDTO;
 import br.com.yhugorocha.social.entities.Post;
+import br.com.yhugorocha.social.exception.BusinessException;
+import br.com.yhugorocha.social.exception.PostNotFoundException;
 import br.com.yhugorocha.social.mapper.PostMapper;
 import br.com.yhugorocha.social.repository.PostRepository;
 import br.com.yhugorocha.social.service.PostService;
@@ -37,7 +39,7 @@ public class PostServiceImpl implements PostService {
         var post = this.findByIdInternal(postId);
 
         if (!post.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("User does not have permission to delete this post");
+            throw new BusinessException("User does not have permission to delete this post");
         }
 
         postRepository.delete(post);
@@ -74,6 +76,6 @@ public class PostServiceImpl implements PostService {
 
     public Post findByIdInternal(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+                .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
     }
 }

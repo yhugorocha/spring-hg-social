@@ -3,6 +3,7 @@ package br.com.yhugorocha.social.service.impl;
 import br.com.yhugorocha.social.dto.UserRequestDTO;
 import br.com.yhugorocha.social.dto.UserResponseDTO;
 import br.com.yhugorocha.social.entities.User;
+import br.com.yhugorocha.social.exception.UserNotFoundException;
 import br.com.yhugorocha.social.mapper.UserMapper;
 import br.com.yhugorocha.social.repository.UserRepository;
 import br.com.yhugorocha.social.service.UserService;
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
     public User findByIdInternal(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
     }
 
     @Override
