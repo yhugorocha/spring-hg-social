@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface UserService {
 
-    public UserResponseDTO register(UserRequestDTO user);
-    public UserResponseDTO findUserById(Long userId);
-    public UserResponseDTO findUserByEmail(String email);
-    public UserResponseDTO followUser(Long userId, Long followUserId);
-    public UserResponseDTO updateUser(Long userId, UserRequestDTO user);
-    public List<UserResponseDTO> searchUser(String query);
+    UserResponseDTO register(UserRequestDTO user);
+    UserResponseDTO findUserById(Long userId);
+    UserResponseDTO findUserByEmail(String email);
+    UserResponseDTO followUser(Long userId, Long followUserId);
+    UserResponseDTO updateUser(Long userId, UserRequestDTO user);
+    List<UserResponseDTO> searchUser(String query);
 }
