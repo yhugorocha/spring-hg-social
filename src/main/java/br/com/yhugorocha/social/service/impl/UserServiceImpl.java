@@ -76,6 +76,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDTO> searchUser(String query) {
-        return List.of();
+        return userRepository.searchUser(query)
+                .stream()
+                .map(userMapper::userResponseDTO)
+                .toList();
     }
 }
