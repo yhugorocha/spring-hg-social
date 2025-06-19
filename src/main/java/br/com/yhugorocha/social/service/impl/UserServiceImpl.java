@@ -41,9 +41,25 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UserResponseDTO followUser(Long userId, Long followUserId) {
-        return null;
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        User followUser = userRepository.findById(followUserId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + followUserId));
+
+        if (user.getFollowing().contains(followUserId)) {
+            throw new RuntimeException("You are already following this user.");
+        }
+
+        user.getFollowing().add(followUser.getId());
+        followUser.getFollowers().add(user.getId());
+
+        userRepository.save(user);
+        userRepository.save(followUser);
+
+        return userMapper.userResponseDTO(user);
     }
 
     @Override
