@@ -46,12 +46,12 @@ public class UserServiceImpl implements UserService {
         User user = this.findByIdInternal(userId);
         User followUser = this.findByIdInternal(followUserId);
 
-        if (user.getFollowing().contains(followUserId)) {
+        if (user.getFollowing().contains(followUser)) {
             throw new RuntimeException("You are already following this user.");
         }
 
-        user.getFollowing().add(followUser.getId());
-        followUser.getFollowers().add(user.getId());
+        user.getFollowing().add(followUser);
+        followUser.getFollowers().add(user);
 
         userRepository.save(user);
         userRepository.save(followUser);

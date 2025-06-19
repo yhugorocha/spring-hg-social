@@ -1,17 +1,15 @@
 package br.com.yhugorocha.social.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_users")
@@ -37,9 +35,16 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    private List<Long> following = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "user_following",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "followed_id")
+    )
+    private Set<User> following = new HashSet<>();
 
-    private List<Long> followers = new ArrayList<>();
+    @ManyToMany(mappedBy = "following")
+    private Set<User> followers = new HashSet<>();
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
