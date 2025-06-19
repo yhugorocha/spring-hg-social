@@ -1,4 +1,4 @@
-package br.com.yhugorocha.hg_social;
+package br.com.yhugorocha.social;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

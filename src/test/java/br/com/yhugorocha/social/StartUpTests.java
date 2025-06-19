@@ -1,4 +1,4 @@
-package br.com.yhugorocha.hg_social;
+package br.com.yhugorocha.social;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
