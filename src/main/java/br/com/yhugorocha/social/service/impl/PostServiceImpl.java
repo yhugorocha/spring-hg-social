@@ -7,6 +7,7 @@ import br.com.yhugorocha.social.exception.BusinessException;
 import br.com.yhugorocha.social.exception.PostNotFoundException;
 import br.com.yhugorocha.social.mapper.PostMapper;
 import br.com.yhugorocha.social.repository.PostRepository;
+import br.com.yhugorocha.social.repository.UserRepository;
 import br.com.yhugorocha.social.service.PostService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
-
     private final UserServiceImpl userService;
+    private final UserRepository userRepository;
 
     @Transactional
     @Override
@@ -65,9 +66,19 @@ public class PostServiceImpl implements PostService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public PostResponseDTO savePost(Long postId, Long userId) {
-        return null;
+        var post = this.findByIdInternal(postId);
+        var user = userService.findByIdInternal(userId);
+
+    if (user.getSavedPosts().contains(post)) {
+            user.getSavedPosts().remove(post);
+        } else {
+            user.getSavedPosts().add(post);
+        }
+        userRepository.save(user);
+        return postMapper.postResponseDTO(post);
     }
 
     @Transactional
