@@ -16,13 +16,13 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/{userId}")
+    @PostMapping("/user/{userId}")
     public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostRequestDTO requestDTO,@PathVariable Long userId) {
         PostResponseDTO createdPost = postService.createNewPost(requestDTO, userId);
         return ResponseEntity.ok(createdPost);
     }
 
-    @DeleteMapping("/{postId}/{userId}")
+    @DeleteMapping("/{postId}/user/{userId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId, @PathVariable Long userId) {
         postService.deletePost(postId, userId);
         return ResponseEntity.noContent().build();
@@ -45,13 +45,13 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @PutMapping("/save/{postId}/{userId}")
+    @PutMapping("/save/{postId}/user/{userId}")
     public ResponseEntity<PostResponseDTO> savePost(@PathVariable Long postId, @PathVariable Long userId) {
         PostResponseDTO savedPost = postService.savePost(postId, userId);
         return ResponseEntity.ok(savedPost);
     }
 
-    @PutMapping("/like/{postId}/{userId}")
+    @PutMapping("/like/{postId}/user/{userId}")
     public ResponseEntity<PostResponseDTO> likePost(@PathVariable Long postId, @PathVariable Long userId) {
         PostResponseDTO likedPost = postService.likePost(postId, userId);
         return ResponseEntity.ok(likedPost);
