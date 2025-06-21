@@ -31,8 +31,8 @@ public class Post {
     @Column(name = "video_url")
     private String videoUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToMany
