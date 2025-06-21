@@ -63,6 +63,8 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAll()
                 .stream()
                 .map(postMapper::postResponseDTO)
+                .sorted((post1, post2) ->
+                        post2.getCreatedAt().compareTo(post1.getCreatedAt()))
                 .toList();
     }
 
