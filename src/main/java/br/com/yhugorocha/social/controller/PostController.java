@@ -18,21 +18,21 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
 
-    @PostMapping("/user")
+    @PostMapping
     public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostRequestDTO requestDTO, @CookieValue("backendHgSocial") String token) {
         var userId = userService.findUserByToken(token).getId();
         PostResponseDTO createdPost = postService.createNewPost(requestDTO, userId);
         return ResponseEntity.ok(createdPost);
     }
 
-    @DeleteMapping("/{postId}/user")
+    @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId, @CookieValue("backendHgSocial") String token) {
         var userId = userService.findUserByToken(token).getId();
         postService.deletePost(postId, userId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user")
+    @GetMapping
     public ResponseEntity<List<PostResponseDTO>> getAllPostsByUser(@CookieValue("backendHgSocial") String token) {
         var userId = userService.findUserByToken(token).getId();
         return ResponseEntity.ok(postService.getAllPostsByUserId(userId));
@@ -50,14 +50,14 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @PutMapping("/{postId}/save/user")
+    @PutMapping("/{postId}/save")
     public ResponseEntity<PostResponseDTO> savePost(@PathVariable Long postId, @CookieValue("backendHgSocial") String token) {
         var userId = userService.findUserByToken(token).getId();
         PostResponseDTO savedPost = postService.savePost(postId, userId);
         return ResponseEntity.ok(savedPost);
     }
 
-    @PutMapping("/{postId}/like/user")
+    @PutMapping("/{postId}/like")
     public ResponseEntity<PostResponseDTO> likePost(@PathVariable Long postId, @CookieValue("backendHgSocial") String token) {
         var userId = userService.findUserByToken(token).getId();
         PostResponseDTO likedPost = postService.likePost(postId, userId);
