@@ -31,18 +31,25 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserByEmail(email));
     }
 
-    @PostMapping("/{userId}/follow/{followUserId}")
-    public ResponseEntity<UserResponseDTO> followUser(@PathVariable Long userId, @PathVariable Long followUserId) {
+    @PostMapping("/follow/{followUserId}")
+    public ResponseEntity<UserResponseDTO> followUser(@CookieValue("backendHgSocial") String token, @PathVariable Long followUserId) {
+        var userId = userService.findUserByToken(token).getId();
         return ResponseEntity.ok(userService.followUser(userId, followUserId));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO user) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
+    @PutMapping
+    public ResponseEntity<UserResponseDTO> updateUser(@CookieValue("backendHgSocial") String token, @RequestBody UserRequestDTO user) {
+        var userId = userService.findUserByToken(token).getId();
+        return ResponseEntity.ok(userService.updateUser(userId, user));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<UserResponseDTO>> searchUser(@RequestParam String query) {
         return ResponseEntity.ok(userService.searchUser(query));
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserResponseDTO> getUserFromToken(@CookieValue("backendHgSocial") String token) {
+        return ResponseEntity.ok(userService.findUserByToken(token));
     }
 }

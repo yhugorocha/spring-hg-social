@@ -13,4 +13,5 @@ public interface UserService {
     UserResponseDTO followUser(Long userId, Long followUserId);
     UserResponseDTO updateUser(Long userId, UserRequestDTO user);
     List<UserResponseDTO> searchUser(String query);
+    UserResponseDTO findUserByToken(String token);
 }

@@ -3,6 +3,7 @@ package br.com.yhugorocha.social.controller;
 import br.com.yhugorocha.social.dto.PostRequestDTO;
 import br.com.yhugorocha.social.dto.PostResponseDTO;
 import br.com.yhugorocha.social.service.PostService;
+import br.com.yhugorocha.social.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,21 +16,25 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final UserService userService;
 
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostRequestDTO requestDTO,@PathVariable Long userId) {
+    @PostMapping("/user")
+    public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostRequestDTO requestDTO, @CookieValue("backendHgSocial") String token) {
+        var userId = userService.findUserByToken(token).getId();
         PostResponseDTO createdPost = postService.createNewPost(requestDTO, userId);
         return ResponseEntity.ok(createdPost);
     }
 
-    @DeleteMapping("/{postId}/user/{userId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId, @PathVariable Long userId) {
+    @DeleteMapping("/{postId}/user")
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId, @CookieValue("backendHgSocial") String token) {
+        var userId = userService.findUserByToken(token).getId();
         postService.deletePost(postId, userId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PostResponseDTO>> getAllPostsByUserId(@PathVariable Long userId) {
+    @GetMapping("/user")
+    public ResponseEntity<List<PostResponseDTO>> getAllPostsByUser(@CookieValue("backendHgSocial") String token) {
+        var userId = userService.findUserByToken(token).getId();
         return ResponseEntity.ok(postService.getAllPostsByUserId(userId));
     }
 
@@ -45,14 +50,16 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @PutMapping("/{postId}/save/user/{userId}")
-    public ResponseEntity<PostResponseDTO> savePost(@PathVariable Long postId, @PathVariable Long userId) {
+    @PutMapping("/{postId}/save/user")
+    public ResponseEntity<PostResponseDTO> savePost(@PathVariable Long postId, @CookieValue("backendHgSocial") String token) {
+        var userId = userService.findUserByToken(token).getId();
         PostResponseDTO savedPost = postService.savePost(postId, userId);
         return ResponseEntity.ok(savedPost);
     }
 
-    @PutMapping("/{postId}/like/user/{userId}")
-    public ResponseEntity<PostResponseDTO> likePost(@PathVariable Long postId, @PathVariable Long userId) {
+    @PutMapping("/{postId}/like/user")
+    public ResponseEntity<PostResponseDTO> likePost(@PathVariable Long postId, @CookieValue("backendHgSocial") String token) {
+        var userId = userService.findUserByToken(token).getId();
         PostResponseDTO likedPost = postService.likePost(postId, userId);
         return ResponseEntity.ok(likedPost);
     }

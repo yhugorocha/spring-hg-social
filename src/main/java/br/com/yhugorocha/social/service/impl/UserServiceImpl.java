@@ -3,12 +3,15 @@ package br.com.yhugorocha.social.service.impl;
 import br.com.yhugorocha.social.dto.UserRequestDTO;
 import br.com.yhugorocha.social.dto.UserResponseDTO;
 import br.com.yhugorocha.social.entities.User;
+import br.com.yhugorocha.social.exception.BusinessException;
 import br.com.yhugorocha.social.exception.UserNotFoundException;
 import br.com.yhugorocha.social.mapper.UserMapper;
 import br.com.yhugorocha.social.repository.UserRepository;
 import br.com.yhugorocha.social.service.UserService;
+import br.com.yhugorocha.social.util.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +21,15 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
     private final UserMapper userMapper;
 
     @Transactional
     @Override
     public UserResponseDTO register(UserRequestDTO requestDTO) {
         var user = userMapper.userResponseDTOToUser(requestDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return userMapper.userResponseDTO(user);
     }
@@ -38,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(userMapper::userResponseDTO)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                .orElseThrow(() -> new BusinessException("User not found with email: " + email));
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -48,7 +54,7 @@ public class UserServiceImpl implements UserService {
         User followUser = this.findByIdInternal(followUserId);
 
         if (user.getFollowing().contains(followUser)) {
-            throw new RuntimeException("You are already following this user.");
+            throw new BusinessException("You are already following this user.");
         }
 
         user.getFollowing().add(followUser);
@@ -81,5 +87,12 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(userMapper::userResponseDTO)
                 .toList();
+    }
+
+    @Override
+    public UserResponseDTO findUserByToken(String token) {
+        var user = userRepository.findByUsername(jwtUtil.extractUsername(jwtUtil.validateToken(token)))
+                .orElseThrow(() -> new UserNotFoundException("User not found with token: " + token));
+        return userMapper.userResponseDTO(user);
     }
 }
