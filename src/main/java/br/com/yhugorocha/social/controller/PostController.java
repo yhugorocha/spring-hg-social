@@ -32,7 +32,7 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<List<PostResponseDTO>> getAllPostsByUser(@CookieValue("backendHgSocial") String token) {
         var userId = userService.findUserByToken(token).getId();
         return ResponseEntity.ok(postService.getAllPostsByUserId(userId));
